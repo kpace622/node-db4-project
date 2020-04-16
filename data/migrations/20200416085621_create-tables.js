@@ -4,33 +4,37 @@ exports.up = function(knex) {
     knex.schema
         .createTable('recipes', tbl => {
             tbl.increments();
-            tbl.string('recipe_name', 128).notNullable().unique()
+            tbl.string('recipe_name', 128).unique()
         })
         .createTable('ingredients', tbl => {
             tbl.increments();
-            tbl.string('ingredient_name', 128).notNullable().unique()
+            tbl.string('ingredient_name', 128).unique()
         })
         .createTable('recipe_instructions', tbl => {
             tbl.increments();
-            tbl.string('instructions', 256).notNullable()
+            tbl.string('instructions', 256)
             tbl.integer('recipe_id')
                 .unsigned()
-                .notNullable()
                 .references('recipes.id')
+                .onDelete('SET NULL')
+                .onUpdate('SET NULL');
             tbl.integer('ingredient_quantity')
                 .unsigned()
-                .notNullable()
                 .references('ingredients.id')
+                .onDelete('SET NULL')
+                .onUpdate('SET NULL');
         })
         .createTable('recipes_ingredients', tbl => {
             tbl.integer('recipe_id')
                 .unsigned()
-                .notNullable()
                 .references('recipes.id')
+                .onDelete('SET NULL')
+                .onUpdate('SET NULL');
             tbl.integer('ingredients_id')
-            .unsigned()
-            .notNullable()
-            .references('ingredients.id')
+                .unsigned()
+                .references('ingredients.id')
+                .onDelete('SET NULL')
+                .onUpdate('SET NULL');
         })
   );
 };
